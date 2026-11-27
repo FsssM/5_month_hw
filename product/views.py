@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from .serializers import CategorySerializer, ProductSerializer, ProductReviewsSerializer, ReviewSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -55,4 +55,10 @@ def review_detail_api_view(request, id):
     except Review.DoesNotExist:
         return Response(data={'error': 'Review not found!'}, status=status.HTTP_404_NOT_FOUND)
     data = ReviewSerializer(review).data
+    return Response(data=data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def product_reviews_list_api_view(request):
+    products = Product.objects.all()
+    data = ProductReviewsSerializer(products, many=True).data
     return Response(data=data, status=status.HTTP_200_OK)
